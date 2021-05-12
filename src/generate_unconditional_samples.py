@@ -18,6 +18,7 @@ def sample_model(
     top_k=0,
     top_p=1,
     models_dir='models',
+    output_path=None
 ):
     """
     Run the sample_model
@@ -39,6 +40,7 @@ def sample_model(
      special setting meaning no restrictions. 40 generally is a good value.
      :models_dir : path to parent folder containing model subfolders
      (i.e. contains the <model_name> folder)
+     :output_path=None: Path of file to write output to
     """
     models_dir = os.path.expanduser(os.path.expandvars(models_dir))
     enc = encoder.get_encoder(model_name, models_dir)
@@ -72,6 +74,11 @@ def sample_model(
             for i in range(batch_size):
                 generated += batch_size
                 text = enc.decode(out[i])
+
+                if output_path:
+                    with open(output_path, 'a') as f:
+                        f.write(text)
+
                 print("=" * 40 + " SAMPLE " + str(generated) + " " + "=" * 40)
                 print(text)
 
